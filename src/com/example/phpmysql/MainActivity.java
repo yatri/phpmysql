@@ -1,5 +1,6 @@
 package com.example.phpmysql;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,12 +42,16 @@ public class MainActivity extends Activity {
 	EditText inputName;
 	EditText inputPassword;
 	JSONParser jsonParser = new JSONParser();
+	String servermessage = "";
+	private SQLiteDatabase dataBase;
 	// JSON Node names
 	private static final String TAG_SUCCESS = "success";
+	private static final String TAG_MSG = "msg";
 	private static final String TAG_USERDATA = "userdata";
 	private static final String FRIST_NAME = "first_Name";
 	private static final String LAST_NAME = "last_Name";
 	private static final String EMAIL = "email";
+	private static final String TABLE_NAME = "district";
 
 	// flag for Internet connection status
 	Boolean isInternetPresent = false;
@@ -57,11 +65,33 @@ public class MainActivity extends Activity {
 	String name;
 	String password;
 	private static String login_page = "http://192.168.40.80:81/loginapi/index.php/login";
+	DataBaseHelper myDbHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		myDbHelper = new DataBaseHelper(this);
+
+		try {
+
+			myDbHelper.createDataBase();
+
+		} catch (IOException ioe) {
+
+			throw new Error("Unable to create database");
+
+		}
+
+		try {
+
+			myDbHelper.openDataBase();
+
+		} catch (SQLException sqle) {
+
+			throw sqle;
+
+		}
 
 		// creating connection detector class instance
 		cd = new ConnectionDetector(getApplicationContext());
@@ -166,6 +196,7 @@ public class MainActivity extends Activity {
 				Log.d("Create Response", json.toString());
 				try {
 					int success = json.getInt(TAG_SUCCESS);
+					servermessage = json.getString(TAG_MSG);
 					if (success == 1) {
 						String userdatainfo = json.getString(TAG_USERDATA);
 						JSONObject userdata = new JSONObject(userdatainfo);
@@ -202,6 +233,9 @@ public class MainActivity extends Activity {
 				Log.d("status", String.valueOf(jsonstatus));
 				Toast.makeText(getApplicationContext(),
 						"Server Error!! Please Try Again Later.",
+						Toast.LENGTH_LONG).show();
+			} else {
+				Toast.makeText(getApplicationContext(), servermessage,
 						Toast.LENGTH_LONG).show();
 			}
 		}

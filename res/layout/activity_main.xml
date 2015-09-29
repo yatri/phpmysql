@@ -29,7 +29,8 @@
             android:singleLine="true"
             android:textColor="@color/input_login"
             android:textColorHint="@color/input_login_hint" >
-            <requestFocus />
+
+            <requestFocus />
         </EditText>
 
         <EditText

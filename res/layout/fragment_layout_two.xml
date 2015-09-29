@@ -1,0 +1,162 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/bg_login"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="20dp" >
+
+        <TextView
+            android:id="@+id/nametxt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="Name"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/curve_field"
+            android:ems="10"
+            android:padding="8dp" >
+
+            <requestFocus />
+        </EditText>
+
+        <TextView
+            android:id="@+id/districttxt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="District"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/district"
+            style="@style/spinner_style"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:dropDownWidth="fill_parent"
+            android:entries="@array/district"
+            android:padding="10dp" />
+
+        <TextView
+            android:id="@+id/vdcmuntxt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="VDC/MUN"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/vdcmun"
+            style="@style/spinner_style"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:entries="@array/district"
+            android:padding="10dp" />
+
+        <TextView
+            android:id="@+id/toletxt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="Tole"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/tole"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/curve_field"
+            android:ems="10"
+            android:padding="10dp" />
+
+        <TextView
+            android:id="@+id/wardtxt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="Ward No"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/ward"
+            style="@style/spinner_style"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:padding="10dp" />
+
+        <TextView
+            android:id="@+id/commenttxt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="Comment"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/comment"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/curve_field"
+            android:ems="10"
+            android:inputType="textMultiLine"
+            android:lines="5"
+            android:minLines="4"
+            android:scrollbars="vertical" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30px"
+            android:layout_marginTop="20px" >
+
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="100dp"
+                android:background="@drawable/roundshapecancelbtn"
+                android:radius="10dip"
+                android:text="   Cancel  "
+                android:textColor="#fff" />
+
+            <Button
+                android:id="@+id/submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/roundshapebtn"
+                android:text="    Submit    "
+                android:textColor="#fff" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
