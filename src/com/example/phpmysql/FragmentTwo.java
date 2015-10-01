@@ -4,42 +4,46 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import android.R.string;
 import android.app.Fragment;
-import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class FragmentTwo extends Fragment {
 
 	private Button submit;
 	private Button cancel;
+	private String nameval, toleval, commentval;
+	private int distval, vdcval, wardval, userid;
 	private EditText name, tole, comment;
 	private Spinner district, vdc, ward;
 	String[] items = new String[] { "Select ward", "1", "2", "3", "4", "5",
 			"6", "7", "8", "9" };
 	private static final String TABLE_NAME = "district";
 	private static final String TABLE_NAME_VDC = "vdclist";
+	private static final String USER_ID = "use_id";
 	private SQLiteDatabase dataBase;
-	DataBaseHelper myDbHelper;
+	private int distsel;
+	private int vdcsel;
+	DatabaseHandler myDbHelper;
 	List<String> districtSpinner = new ArrayList<String>();
 	List<String> vdcSpinner = new ArrayList<String>();
-
+	
 	public FragmentTwo() {
 
 	}
@@ -50,6 +54,10 @@ public class FragmentTwo extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_layout_two, container,
 				false);
 
+		SharedPreferences userdata = PreferenceManager
+				.getDefaultSharedPreferences(getActivity());
+		userid = userdata.getInt(USER_ID, 0);
+		System.out.println(userid);
 		submit = (Button) view.findViewById(R.id.submit);
 		cancel = (Button) view.findViewById(R.id.cancel);
 		name = (EditText) view.findViewById(R.id.name);
@@ -65,14 +73,17 @@ public class FragmentTwo extends Fragment {
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
 		ward.setAdapter(dataAdapter);
-
-		myDbHelper = new DataBaseHelper(getActivity());
+		List<District> distlist = new ArrayList<District>();
+		distlist.add(new District(0, "Select District"));
+		myDbHelper = new DatabaseHandler(getActivity());
 		dataBase = myDbHelper.getWritableDatabase();
 		Cursor mCursor = dataBase.rawQuery("SELECT * FROM " + TABLE_NAME, null);
 		if (mCursor.moveToFirst()) {
 			do {
-				districtSpinner.add(mCursor.getString(mCursor
-						.getColumnIndex("district_name")));
+				distlist.add(new District(mCursor.getInt(mCursor
+						.getColumnIndex("district_id")), mCursor
+						.getString(mCursor.getColumnIndex("district_name"))));
+				// districtSpinner.add(mCursor.getString(mCursor.getColumnIndex("district_name")));
 				// Log.d("districtID", mCursor.getString(mCursor
 				// .getColumnIndex("district_id")));
 				// Log.d("districtName", mCursor.getString(mCursor
@@ -80,10 +91,12 @@ public class FragmentTwo extends Fragment {
 
 			} while (mCursor.moveToNext());
 		}
-
+		ArrayAdapter<District> dataAdapterdist = new ArrayAdapter<District>(
+				getActivity(), android.R.layout.simple_spinner_item, distlist);
 		// Creating adapter for spinner
-		ArrayAdapter<String> dataAdapterdist = new ArrayAdapter<String>(
-				getActivity(), android.R.layout.simple_spinner_item, districtSpinner);
+		// ArrayAdapter<String> dataAdapterdist = new ArrayAdapter<String>(
+		// getActivity(), android.R.layout.simple_spinner_item,
+		// districtSpinner);
 
 		// Drop down layout style - list view with radio button
 		dataAdapterdist
@@ -91,24 +104,34 @@ public class FragmentTwo extends Fragment {
 
 		// attaching data adapter to spinner
 		district.setAdapter(dataAdapterdist);
-		
 
+		List<Vdc> vdclist = new ArrayList<Vdc>();
+		vdclist.add(new Vdc(0, "Select VDC", 0));
 		Cursor mCursorvdc = dataBase.rawQuery(
 				"SELECT * FROM " + TABLE_NAME_VDC, null);
-			System.out.println(mCursorvdc);
+		// System.out.println(mCursorvdc);
 		if (mCursorvdc.moveToFirst()) {
 			do {
-				vdcSpinner.add(mCursorvdc.getString(mCursorvdc
-						.getColumnIndex("vdc_name")));
-				 Log.d("vdcname", mCursorvdc.getString(mCursorvdc
-							.getColumnIndex("vdc_name")));
+				vdclist.add(new Vdc(mCursorvdc.getInt(mCursorvdc
+						.getColumnIndex("vdc_id")), mCursorvdc
+						.getString(mCursorvdc.getColumnIndex("vdc_name")),
+						mCursorvdc.getInt(mCursorvdc
+								.getColumnIndex("district_id"))));
+
+				// vdcSpinner.add(mCursorvdc.getString(mCursorvdc
+				// .getColumnIndex("vdc_name")));
+				// Log.d("vdcname", mCursorvdc.getString(mCursorvdc
+				// .getColumnIndex("vdc_name")));
 
 			} while (mCursorvdc.moveToNext());
 		}
 
+		ArrayAdapter<Vdc> dataAdaptervdc = new ArrayAdapter<Vdc>(getActivity(),
+				android.R.layout.simple_spinner_item, vdclist);
+
 		// Creating adapter for spinner
-		ArrayAdapter<String> dataAdaptervdc = new ArrayAdapter<String>(
-				getActivity(), android.R.layout.simple_spinner_item, vdcSpinner);
+		// ArrayAdapter<String> dataAdaptervdc = new ArrayAdapter<String>(
+		// getActivity(), android.R.layout.simple_spinner_item, vdcSpinner);
 
 		// Drop down layout style - list view with radio button
 		dataAdaptervdc
@@ -121,8 +144,41 @@ public class FragmentTwo extends Fragment {
 
 			public void onItemSelected(AdapterView<?> parentView,
 					View selectedItemView, int position, long id) {
-				Toast.makeText(getActivity(), "You Click Select",
-						Toast.LENGTH_SHORT).show();
+				District dist = (District) parentView
+						.getItemAtPosition(position);
+				int dist_id = dist.getDistrict_id();
+				distsel = dist_id;
+				// System.out.println(distsel);
+				List<Vdc> vdclist = new ArrayList<Vdc>();
+				vdclist.add(new Vdc(0, "Select VDC", 0));
+				if (dist_id != 0) {
+					Cursor cursordistsel = dataBase.rawQuery(
+							"SELECT * FROM " + TABLE_NAME_VDC
+									+ " WHERE district_id =" + dist_id, null);
+					if (cursordistsel.moveToFirst()) {
+						do {
+							vdclist.add(new Vdc(cursordistsel
+									.getInt(cursordistsel
+											.getColumnIndex("vdc_id")),
+									cursordistsel.getString(cursordistsel
+											.getColumnIndex("vdc_name")),
+									cursordistsel.getInt(cursordistsel
+											.getColumnIndex("district_id"))));
+
+						} while (cursordistsel.moveToNext());
+					}
+
+				} else {
+					vdclist.clear();
+					vdclist.add(new Vdc(0, "Select VDC", 0));
+				}
+				ArrayAdapter<Vdc> dataAdaptervdc = new ArrayAdapter<Vdc>(
+						getActivity(), android.R.layout.simple_spinner_item,
+						vdclist);
+				dataAdaptervdc
+						.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+				vdc.setAdapter(dataAdaptervdc);
 
 			}
 
@@ -130,14 +186,13 @@ public class FragmentTwo extends Fragment {
 			}
 
 		});
-		
+
 		vdc.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			public void onItemSelected(AdapterView<?> parentView,
 					View selectedItemView, int position, long id) {
-				Toast.makeText(getActivity(), "You Click vdc Select",
-						Toast.LENGTH_SHORT).show();
-
+				Vdc vdcitem = (Vdc) parentView.getItemAtPosition(position);
+				vdcsel = vdcitem.getVdc_id();
 			}
 
 			public void onNothingSelected(AdapterView<?> arg0) {// do nothing
@@ -148,37 +203,31 @@ public class FragmentTwo extends Fragment {
 		submit.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
-				Toast.makeText(getActivity(), "You Click Submit",
+				nameval = name.getText().toString();
+				toleval = tole.getText().toString();
+				wardval = Integer.parseInt(ward.getSelectedItem().toString());
+				commentval = comment.getText().toString();
+				FormData frmdata = new FormData(userid, nameval, distsel,
+						vdcsel, toleval, wardval, commentval);
+				DatabaseHandler db = new DatabaseHandler(getActivity());
+				db.addComment(frmdata);
+				System.out.println(frmdata);
+				Toast.makeText(getActivity(),
+						"You Click Submit district" + distsel + "vdc" + vdcsel,
 						Toast.LENGTH_SHORT).show();
 			}
 		});
 		cancel.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				DatabaseHandler db = new DatabaseHandler(getActivity());
+				List<FormData> commentdata = db.getAllComments();
+				Log.d("comment",commentdata.toString());
 				Toast.makeText(getActivity(), "You Click cancel",
 						Toast.LENGTH_SHORT).show();
 			}
 		});
 
-		/*
-		 * Spinner spinner = (Spinner) getView().findViewById(R.id.district); //
-		 * Create an ArrayAdapter using the string array and a default spinner
-		 * layout ArrayAdapter<CharSequence> adapter =
-		 * ArrayAdapter.createFromResource(getActivity(), R.array.district,
-		 * android.R.layout.simple_spinner_item); // Specify the layout to use
-		 * when the list of choices appears
-		 * adapter.setDropDownViewResource(android
-		 * .R.layout.simple_spinner_dropdown_item); // Apply the adapter to the
-		 * spinner spinner.setAdapter(adapter);
-		 */
-
-		// ivIcon=(ImageView)view.findViewById(R.id.frag2_icon);
-		// tvItemName=(TextView)view.findViewById(R.id.frag2_text);
-		//
-		// tvItemName.setText(getArguments().getString(ITEM_NAME));
-		// ivIcon.setImageDrawable(view.getResources().getDrawable(
-		// getArguments().getInt(IMAGE_RESOURCE_ID)));
 		return view;
 	}
 

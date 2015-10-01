@@ -1,6 +1,8 @@
 package com.example.phpmysql;
 
+import java.io.File;
 import java.io.IOException;
+import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +21,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -49,6 +52,7 @@ public class MainActivity extends Activity {
 	private static final String TAG_MSG = "msg";
 	private static final String TAG_USERDATA = "userdata";
 	private static final String FRIST_NAME = "first_Name";
+	private static final String USER_ID = "use_id";
 	private static final String LAST_NAME = "last_Name";
 	private static final String EMAIL = "email";
 	private static final String TABLE_NAME = "district";
@@ -64,18 +68,33 @@ public class MainActivity extends Activity {
 	Editor editor;
 	String name;
 	String password;
+	int userid;
 	private static String login_page = "http://192.168.40.80:81/loginapi/index.php/login";
 	DataBaseHelper myDbHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		SharedPreferences userdata = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		userid = userdata.getInt(USER_ID, 0);
+		
+		if(userid!=0){
+			Intent i = new Intent(getApplicationContext(),
+					Homepage.class);
+			startActivity(i);
+		}
+		
 		setContentView(R.layout.activity_main);
 		myDbHelper = new DataBaseHelper(this);
 
-		try {
+		File file = new File("phpmysql");
 
-			myDbHelper.createDataBase();
+		try {
+			if (!file.exists()) // here's how to check
+			{
+				myDbHelper.createDataBase();
+			}
 
 		} catch (IOException ioe) {
 
@@ -113,7 +132,7 @@ public class MainActivity extends Activity {
 			Toast.makeText(getApplicationContext(), extra, Toast.LENGTH_LONG)
 					.show();
 		}
-		pref = getApplicationContext().getSharedPreferences("MyPref", 0);
+		pref = PreferenceManager.getDefaultSharedPreferences(this);
 		editor = pref.edit();
 
 		// edittext;
@@ -202,7 +221,8 @@ public class MainActivity extends Activity {
 						JSONObject userdata = new JSONObject(userdatainfo);
 						// String firstname = userval.getString(FRIST_NAME);
 						// Log.d("Response",firstname);
-
+						// System.out.println(userdata.getInt(USER_ID));
+						editor.putInt(USER_ID, userdata.getInt(USER_ID));
 						editor.putString(FRIST_NAME,
 								userdata.getString(FRIST_NAME));
 						editor.putString(LAST_NAME,
@@ -254,7 +274,15 @@ public class MainActivity extends Activity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
+		Log.d("click","logout");
 		if (id == R.id.action_settings) {
+			Log.d("click","logout");
+			return true;
+		}else if (id == R.id.logout) {
+			Log.d("click","logout");
+			Toast.makeText(getApplicationContext(),
+					"you clicked logout", Toast.LENGTH_LONG)
+					.show();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

@@ -4,19 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class Homepage extends ActionBarActivity {
 
@@ -27,7 +33,7 @@ public class Homepage extends ActionBarActivity {
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
 	CustomDrawerAdapter adapter;
-
+	SharedPreferences pref;	
 	List<DrawerItem> dataList;
 
 	@Override
@@ -46,19 +52,21 @@ public class Homepage extends ActionBarActivity {
 
 		// Add Drawer Item to dataList
 		dataList.add(new DrawerItem("Dashboard", R.drawable.ic_action_email));
-		dataList.add(new DrawerItem("Likes", R.drawable.ic_action_good));
-		dataList.add(new DrawerItem("Games", R.drawable.ic_action_gamepad));
+		dataList.add(new DrawerItem("Comment", R.drawable.ic_action_good));
+		dataList.add(new DrawerItem("List Comment",
+				R.drawable.ic_action_gamepad));
 		dataList.add(new DrawerItem("Lables", R.drawable.ic_action_labels));
 		dataList.add(new DrawerItem("Search", R.drawable.ic_action_search));
 		dataList.add(new DrawerItem("Cloud", R.drawable.ic_action_cloud));
 		dataList.add(new DrawerItem("Camara", R.drawable.ic_action_camera));
-		dataList.add(new DrawerItem("Video", R.drawable.ic_action_video));
-		dataList.add(new DrawerItem("Groups", R.drawable.ic_action_group));
-		dataList.add(new DrawerItem("Import & Export",
-				R.drawable.ic_action_import_export));
-		dataList.add(new DrawerItem("About", R.drawable.ic_action_about));
-		dataList.add(new DrawerItem("Settings", R.drawable.ic_action_settings));
-		dataList.add(new DrawerItem("Help", R.drawable.ic_action_help));
+		// dataList.add(new DrawerItem("Video", R.drawable.ic_action_video));
+		// dataList.add(new DrawerItem("Groups", R.drawable.ic_action_group));
+		// dataList.add(new DrawerItem("Import & Export",
+		// R.drawable.ic_action_import_export));
+		// dataList.add(new DrawerItem("About", R.drawable.ic_action_about));
+		// dataList.add(new DrawerItem("Settings",
+		// R.drawable.ic_action_settings));
+		// dataList.add(new DrawerItem("Help", R.drawable.ic_action_help));
 
 		adapter = new CustomDrawerAdapter(this, R.layout.custom_drawer_item,
 				dataList);
@@ -119,72 +127,8 @@ public class Homepage extends ActionBarActivity {
 			break;
 		case 2:
 			fragment = new FragmentThree();
-			args.putString(FragmentThree.ITEM_NAME, dataList.get(possition)
-					.getItemName());
-			args.putInt(FragmentThree.IMAGE_RESOURCE_ID, dataList
-					.get(possition).getImgResID());
 			break;
-		case 3:
-			fragment = new FragmentOne();
-			args.putString(FragmentOne.ITEM_NAME, dataList.get(possition)
-					.getItemName());
-			args.putInt(FragmentOne.IMAGE_RESOURCE_ID, dataList.get(possition)
-					.getImgResID());
-			break;
-		case 4:
-			fragment = new FragmentTwo();
 
-			break;
-		case 5:
-			fragment = new FragmentThree();
-			args.putString(FragmentThree.ITEM_NAME, dataList.get(possition)
-					.getItemName());
-			args.putInt(FragmentThree.IMAGE_RESOURCE_ID, dataList
-					.get(possition).getImgResID());
-			break;
-		case 6:
-			fragment = new FragmentOne();
-			args.putString(FragmentOne.ITEM_NAME, dataList.get(possition)
-					.getItemName());
-			args.putInt(FragmentOne.IMAGE_RESOURCE_ID, dataList.get(possition)
-					.getImgResID());
-			break;
-		case 7:
-			fragment = new FragmentTwo();
-
-			break;
-		case 8:
-			fragment = new FragmentThree();
-			args.putString(FragmentThree.ITEM_NAME, dataList.get(possition)
-					.getItemName());
-			args.putInt(FragmentThree.IMAGE_RESOURCE_ID, dataList
-					.get(possition).getImgResID());
-			break;
-		case 9:
-			fragment = new FragmentOne();
-			args.putString(FragmentOne.ITEM_NAME, dataList.get(possition)
-					.getItemName());
-			args.putInt(FragmentOne.IMAGE_RESOURCE_ID, dataList.get(possition)
-					.getImgResID());
-			break;
-		case 10:
-			fragment = new FragmentTwo();
-
-			break;
-		case 11:
-			fragment = new FragmentThree();
-			args.putString(FragmentThree.ITEM_NAME, dataList.get(possition)
-					.getItemName());
-			args.putInt(FragmentThree.IMAGE_RESOURCE_ID, dataList
-					.get(possition).getImgResID());
-			break;
-		case 12:
-			fragment = new FragmentOne();
-			args.putString(FragmentOne.ITEM_NAME, dataList.get(possition)
-					.getItemName());
-			args.putInt(FragmentOne.IMAGE_RESOURCE_ID, dataList.get(possition)
-					.getImgResID());
-			break;
 		default:
 			break;
 		}
@@ -224,10 +168,25 @@ public class Homepage extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// The action bar home/up action should open or close the drawer.
 		// ActionBarDrawerToggle will take care of this.
-		if (mDrawerToggle.onOptionsItemSelected(item)) {
+		// if (mDrawerToggle.onOptionsItemSelected(item)) {
+		// return true;
+		// }
+		//
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			Log.d("click", "logout");
+			return true;
+		} else if (id == R.id.logout) {
+			Log.d("click", "logout");
+			pref = PreferenceManager.getDefaultSharedPreferences(this);
+			pref.edit().clear().commit();
+			Toast.makeText(getApplicationContext(), "you clicked logout",
+					Toast.LENGTH_LONG).show();
+			Intent i = new Intent(getApplicationContext(),
+					MainActivity.class);
+			startActivity(i);
 			return true;
 		}
-
 		return false;
 	}
 

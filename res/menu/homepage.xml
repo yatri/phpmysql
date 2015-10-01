@@ -9,10 +9,6 @@
         android:title="@string/action_settings"
         android:icon="@drawable/settings"
         app:showAsAction="never"/>
-    <item
-        android:id="@+id/logout"
-        android:icon="@drawable/arrow"
-        android:title="Logout"/>
    
 
 </menu>
