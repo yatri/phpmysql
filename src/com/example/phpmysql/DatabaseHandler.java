@@ -2,6 +2,7 @@ package com.example.phpmysql;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -20,7 +21,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	private static final String KEY_ID = "comment_id";
 	private static final String KEY_NAME = "first_name";
 	private static final String KEY_DISTRICT = "district_id";
+	private static final String KEY_DISTRICT_NAME = "district_name";
 	private static final String KEY_VDC = "vdc_id";
+	private static final String KEY_VDC_NAME = "vdc_name";
 	private static final String KEY_TOLE = "tole";
 	private static final String KEY_WARD = "ward_no";
 	private static final String KEY_COMMENT = "comment";
@@ -67,14 +70,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	public List<FormData> getAllComments() {
 		List<FormData> commentList = new ArrayList<FormData>();
 		SQLiteDatabase db = this.getReadableDatabase();
-		String selectQuery = "SELECT  * FROM " + TABLE_COMMENT;
+		String selectQuery = "SELECT  A.first_name,A.tole,A.comment,A.ward_no,A.user_id,A.comment_id,B.district_name,C.vdc_name FROM  comment  AS A,district B,vdclist C WHERE A.district_id = B.district_id AND A.vdc_id = C.vdc_id AND B.district_id = c.district_id";
+		System.out.println(selectQuery);
 		Cursor cursor = db.rawQuery(selectQuery, null);
 		if (cursor.moveToFirst()) {
 			do {
 				FormData frmdata = new FormData();
 				frmdata.setName(cursor.getString(cursor.getColumnIndex(KEY_NAME)));
-				frmdata.setDistrict_id(cursor.getInt(cursor.getColumnIndex(KEY_DISTRICT)));
-				frmdata.setVdcid(cursor.getInt(cursor.getColumnIndex(KEY_VDC)));
+				frmdata.setDistrict_name(cursor.getString(cursor.getColumnIndex(KEY_DISTRICT_NAME)));
+				frmdata.setVdc_name(cursor.getString(cursor.getColumnIndex(KEY_VDC_NAME)));
 				frmdata.setTole(cursor.getString(cursor.getColumnIndex(KEY_TOLE)));				
 				frmdata.setWardno(cursor.getInt(cursor.getColumnIndex(KEY_WARD)));
 				frmdata.setComment(cursor.getString(cursor.getColumnIndex(KEY_COMMENT)));
@@ -86,5 +90,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 			} while (cursor.moveToNext());
 		}
 		return commentList;
+	}
+	public void updateComment(FormData formdata,int updatid){
+		System.out.println(formdata);
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(KEY_NAME, formdata.getName());
+		values.put(KEY_DISTRICT, formdata.getDistrict_id());
+		values.put(KEY_VDC, formdata.getVdcid());
+		values.put(KEY_TOLE, formdata.getTole());
+		values.put(KEY_WARD, formdata.getWardno());
+		values.put(KEY_COMMENT, formdata.getComment());
+		db.update(TABLE_COMMENT, values, KEY_ID + " = ?",new String[] { String.valueOf(updatid) });
+	}
+	public int deleteData(int comment_id){
+		SQLiteDatabase db = this.getWritableDatabase();
+		return  db.delete(TABLE_COMMENT,KEY_ID + " = ?",new String[] { String.valueOf(comment_id)});
+		
 	}
 }

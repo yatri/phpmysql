@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.R.string;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -28,22 +29,26 @@ public class FragmentTwo extends Fragment {
 
 	private Button submit;
 	private Button cancel;
-	private String nameval, toleval, commentval;
+	private String nameval, toleval, commentval,hiddentextval;
 	private int distval, vdcval, wardval, userid;
-	private EditText name, tole, comment;
+	private EditText name, tole, comment,hidden;
 	private Spinner district, vdc, ward;
 	String[] items = new String[] { "Select ward", "1", "2", "3", "4", "5",
 			"6", "7", "8", "9" };
 	private static final String TABLE_NAME = "district";
+	private static final String TABLE_COMMENT = "comment";
 	private static final String TABLE_NAME_VDC = "vdclist";
 	private static final String USER_ID = "use_id";
 	private SQLiteDatabase dataBase;
 	private int distsel;
 	private int vdcsel;
+	private int editid;
 	DatabaseHandler myDbHelper;
 	List<String> districtSpinner = new ArrayList<String>();
 	List<String> vdcSpinner = new ArrayList<String>();
-	
+	private String editdataname = null;
+	FormData editformdata = new FormData();
+
 	public FragmentTwo() {
 
 	}
@@ -51,21 +56,28 @@ public class FragmentTwo extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+
+		Bundle bundle = this.getArguments();
+		Log.d("arg", Integer.toString(bundle.getInt("posid", 0)));
+		int editid = bundle.getInt("posid", 0);
 		View view = inflater.inflate(R.layout.fragment_layout_two, container,
 				false);
 
 		SharedPreferences userdata = PreferenceManager
 				.getDefaultSharedPreferences(getActivity());
 		userid = userdata.getInt(USER_ID, 0);
-		System.out.println(userid);
+		// System.out.println(userid);
 		submit = (Button) view.findViewById(R.id.submit);
 		cancel = (Button) view.findViewById(R.id.cancel);
 		name = (EditText) view.findViewById(R.id.name);
+		hidden = (EditText) view.findViewById(R.id.hidden);
 		tole = (EditText) view.findViewById(R.id.tole);
 		comment = (EditText) view.findViewById(R.id.comment);
 		district = (Spinner) view.findViewById(R.id.district);
 		vdc = (Spinner) view.findViewById(R.id.vdcmun);
 		ward = (Spinner) view.findViewById(R.id.ward);
+
+		// name.setText(editdataname);
 
 		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(
 				getActivity(), android.R.layout.simple_spinner_item, items);
@@ -77,7 +89,7 @@ public class FragmentTwo extends Fragment {
 		distlist.add(new District(0, "Select District"));
 		myDbHelper = new DatabaseHandler(getActivity());
 		dataBase = myDbHelper.getWritableDatabase();
-		Cursor mCursor = dataBase.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+		Cursor mCursor = dataBase.rawQuery("SELECT * FROM  district ORDER BY district_name desc", null);
 		if (mCursor.moveToFirst()) {
 			do {
 				distlist.add(new District(mCursor.getInt(mCursor
@@ -140,12 +152,60 @@ public class FragmentTwo extends Fragment {
 		// attaching data adapter to spinner
 		vdc.setAdapter(dataAdaptervdc);
 
+		if (editid != 0) {
+
+			myDbHelper = new DatabaseHandler(getActivity());
+			dataBase = myDbHelper.getWritableDatabase();
+			Cursor commentDetail = dataBase.rawQuery("SELECT * FROM "
+					+ TABLE_COMMENT + " WHERE comment_id = " + editid, null);
+
+			System.out.println(commentDetail);
+			if (commentDetail.moveToFirst()){
+				do {
+					name.setText(commentDetail.getString(commentDetail
+							.getColumnIndex("first_name")));
+					hidden.setText(String.valueOf(editid));
+					tole.setText(commentDetail.getString(commentDetail
+							.getColumnIndex("tole")));
+					ward.setSelection(commentDetail.getInt(commentDetail
+							.getColumnIndex("ward_no")) - 1);
+					comment.setText(commentDetail.getString(commentDetail
+							.getColumnIndex("comment")));
+					 int distid = commentDetail.getInt(commentDetail
+					 .getColumnIndex("district_id"));
+					 
+					 List<Vdc> vdclistnew = new ArrayList<Vdc>();
+					 
+					 int vdcid = commentDetail.getInt(commentDetail
+							 .getColumnIndex("vdc_id"));
+					
+					
+					for (District a : distlist) {
+						if(distid == a.getDistrict_id()){
+							district.setSelection(distlist.indexOf(a));
+							break;
+						}
+					}
+					for (Vdc a : vdclistnew) {
+						if(vdcid == a.getVdc_id()){
+							vdc.setSelection(2);
+							System.out.println(vdclistnew.indexOf(a)+1);
+							break;
+						}
+					}
+					
+					
+				} while (commentDetail.moveToNext());
+			}
+		}
+
 		district.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			public void onItemSelected(AdapterView<?> parentView,
 					View selectedItemView, int position, long id) {
 				District dist = (District) parentView
 						.getItemAtPosition(position);
+
 				int dist_id = dist.getDistrict_id();
 				distsel = dist_id;
 				// System.out.println(distsel);
@@ -203,17 +263,30 @@ public class FragmentTwo extends Fragment {
 		submit.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				nameval = name.getText().toString();
-				toleval = tole.getText().toString();
-				wardval = Integer.parseInt(ward.getSelectedItem().toString());
-				commentval = comment.getText().toString();
-				FormData frmdata = new FormData(userid, nameval, distsel,
-						vdcsel, toleval, wardval, commentval);
-				DatabaseHandler db = new DatabaseHandler(getActivity());
-				db.addComment(frmdata);
-				System.out.println(frmdata);
-				Toast.makeText(getActivity(),
-						"You Click Submit district" + distsel + "vdc" + vdcsel,
+				hiddentextval = hidden.getText().toString();
+				// System.out.println(Integer.parseInt(hiddentextval));
+				// Log.d("dd","aa");
+				 nameval = name.getText().toString();
+				 toleval = tole.getText().toString();
+				 wardval = Integer.parseInt(ward.getSelectedItem().toString());
+				 commentval = comment.getText().toString();
+				 FormData frmdata = new FormData(userid, nameval, distsel,
+				 vdcsel, toleval, wardval, commentval);
+				 DatabaseHandler db = new DatabaseHandler(getActivity());
+				 String msg = "";
+				if(Integer.parseInt(hiddentextval)>0){
+					 db.updateComment(frmdata,Integer.parseInt(hiddentextval));
+					 msg = "Data has been Updated";
+				}else{
+					db.addComment(frmdata);
+					 msg = "Data Saved Successfully!!";
+				}
+				 Fragment fragment = null;
+				 fragment = new FragmentThree();
+				 FragmentManager frgManager = getFragmentManager();
+				 frgManager.beginTransaction()
+				 .replace(R.id.content_frame, fragment).commit();
+				Toast.makeText(getActivity(), msg,
 						Toast.LENGTH_SHORT).show();
 			}
 		});
@@ -222,13 +295,11 @@ public class FragmentTwo extends Fragment {
 			public void onClick(View v) {
 				DatabaseHandler db = new DatabaseHandler(getActivity());
 				List<FormData> commentdata = db.getAllComments();
-				Log.d("comment",commentdata.toString());
+				Log.d("comment", commentdata.toString());
 				Toast.makeText(getActivity(), "You Click cancel",
 						Toast.LENGTH_SHORT).show();
 			}
 		});
-
 		return view;
 	}
-
 }

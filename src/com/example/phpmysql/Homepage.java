@@ -6,8 +6,10 @@ import java.util.List;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -17,6 +19,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +36,7 @@ public class Homepage extends ActionBarActivity {
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
 	CustomDrawerAdapter adapter;
-	SharedPreferences pref;	
+	SharedPreferences pref;
 	List<DrawerItem> dataList;
 
 	@Override
@@ -55,7 +58,7 @@ public class Homepage extends ActionBarActivity {
 		dataList.add(new DrawerItem("Comment", R.drawable.ic_action_good));
 		dataList.add(new DrawerItem("List Comment",
 				R.drawable.ic_action_gamepad));
-		dataList.add(new DrawerItem("Lables", R.drawable.ic_action_labels));
+		dataList.add(new DrawerItem("Upload", R.drawable.ic_action_labels));
 		dataList.add(new DrawerItem("Search", R.drawable.ic_action_search));
 		dataList.add(new DrawerItem("Cloud", R.drawable.ic_action_cloud));
 		dataList.add(new DrawerItem("Camara", R.drawable.ic_action_camera));
@@ -117,10 +120,6 @@ public class Homepage extends ActionBarActivity {
 		switch (possition) {
 		case 0:
 			fragment = new FragmentOne();
-			args.putString(FragmentOne.ITEM_NAME, dataList.get(possition)
-					.getItemName());
-			args.putInt(FragmentOne.IMAGE_RESOURCE_ID, dataList.get(possition)
-					.getImgResID());
 			break;
 		case 1:
 			fragment = new FragmentTwo();
@@ -128,11 +127,23 @@ public class Homepage extends ActionBarActivity {
 		case 2:
 			fragment = new FragmentThree();
 			break;
-
+		case 3:
+			fragment = new FragmentFour();
+			break;
+		case 4:
+			fragment = new FragmentTwo();
+			break;
+		case 5:
+			fragment = new FragmentThree();
+			break;
+		case 6:
+			fragment = new FragmentOne();
+			break;
 		default:
 			break;
 		}
 
+		args.putInt("listid", 0);
 		fragment.setArguments(args);
 		FragmentManager frgManager = getFragmentManager();
 		frgManager.beginTransaction().replace(R.id.content_frame, fragment)
@@ -168,9 +179,9 @@ public class Homepage extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// The action bar home/up action should open or close the drawer.
 		// ActionBarDrawerToggle will take care of this.
-		// if (mDrawerToggle.onOptionsItemSelected(item)) {
-		// return true;
-		// }
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
 		//
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
@@ -182,8 +193,8 @@ public class Homepage extends ActionBarActivity {
 			pref.edit().clear().commit();
 			Toast.makeText(getApplicationContext(), "you clicked logout",
 					Toast.LENGTH_LONG).show();
-			Intent i = new Intent(getApplicationContext(),
-					MainActivity.class);
+			Intent i = new Intent(getApplicationContext(), MainActivity.class);
+			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(i);
 			return true;
 		}
@@ -198,6 +209,36 @@ public class Homepage extends ActionBarActivity {
 			SelectItem(position);
 
 		}
+	}
+
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("Do you want to exit ?")
+					.setCancelable(false)
+					.setPositiveButton("OK",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									// do finish
+									Homepage.this.finish();
+									//System.exit(0);
+								}
+							})
+					.setNegativeButton("Cancel",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									// do nothing
+									return;
+								}
+							});
+			AlertDialog alert = builder.create();
+			alert.show();
+
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 }

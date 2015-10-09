@@ -12,7 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 public class ListViewAdaptor extends BaseAdapter {
-	TextView sn, FullName, district, vdc, tole, ward, comment;
+	TextView sn, FullName, district, vdc, tole, ward, comment,commentid;
 	public ArrayList<HashMap<String, String>> list;
 	Activity activity;
 
@@ -44,6 +44,7 @@ public class ListViewAdaptor extends BaseAdapter {
 		LayoutInflater inflater = activity.getLayoutInflater();
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.data_list, null);
+			commentid = (TextView) convertView.findViewById(R.id.commentid);
 			sn = (TextView) convertView.findViewById(R.id.sn);
 			FullName = (TextView) convertView.findViewById(R.id.FullName);
 			district = (TextView) convertView.findViewById(R.id.district);
@@ -53,7 +54,8 @@ public class ListViewAdaptor extends BaseAdapter {
 			comment = (TextView) convertView.findViewById(R.id.comment);
 		}
 		HashMap<String, String> map = list.get(position);
-		sn.setText(map.get("commentid"));
+		commentid.setText(map.get("commentid"));
+		sn.setText(map.get("snkey"));
 		FullName.setText(map.get("name"));
 		district.setText(map.get("district"));
 		vdc.setText(map.get("vdc"));

@@ -9,6 +9,8 @@ public class FormData {
 	private int wardno;
 	private int comment_id;
 	private String comment;
+	private String district_name;
+	private String vdc_name;
 
 	public int getUserid() {
 		return userid;
@@ -65,13 +67,29 @@ public class FormData {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
+
 	public int getComment_id() {
 		return comment_id;
 	}
 
 	public void setComment_id(int comment_id) {
 		this.comment_id = comment_id;
+	}
+
+	public String getDistrict_name() {
+		return district_name;
+	}
+
+	public void setDistrict_name(String district_name) {
+		this.district_name = district_name;
+	}
+
+	public String getVdc_name() {
+		return vdc_name;
+	}
+
+	public void setVdc_name(String vdc_name) {
+		this.vdc_name = vdc_name;
 	}
 
 	public FormData(int userid, String name, int district_id, int vdcid,
@@ -85,8 +103,6 @@ public class FormData {
 		this.wardno = wardno;
 		this.comment = comment;
 	}
-	
-	
 
 	public FormData(int userid, String name, int district_id, int vdcid,
 			String tole, int wardno, int comment_id, String comment) {
@@ -102,7 +118,7 @@ public class FormData {
 	}
 
 	public FormData() {
-		
+
 	}
 
 	@Override
