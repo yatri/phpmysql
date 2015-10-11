@@ -197,6 +197,8 @@ public class FragmentTwo extends Fragment {
 					
 				} while (commentDetail.moveToNext());
 			}
+		}else{
+			hidden.setText(String.valueOf(0));
 		}
 
 		district.setOnItemSelectedListener(new OnItemSelectedListener() {

@@ -3,6 +3,11 @@ package com.example.phpmysql;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.R.integer;
 import android.app.AlertDialog;
@@ -21,6 +26,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
 public class FragmentThree extends Fragment {
 	private ArrayList<HashMap<String, String>> list;
@@ -47,6 +56,8 @@ public class FragmentThree extends Fragment {
 		listView = (ListView) view.findViewById(R.id.listView1);
 		DatabaseHandler db = new DatabaseHandler(getActivity());
 		List<FormData> commentdata = db.getAllComments();
+		JsonObject jsonobj = new JsonObject();
+		
 		int i = 1;
 		commentid.clear();
 		for (FormData frmdta : commentdata) {
@@ -62,7 +73,21 @@ public class FragmentThree extends Fragment {
 			commentid.add(frmdta.getComment_id());
 			list.add(temp);
 		}
-
+		// JSONArray array = new JSONArray();
+		// array.put(list);
+		JSONObject finalObject = new JSONObject();
+		try {
+			finalObject.put("table_data", list);
+			finalObject.put("key_item", "this this");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		GsonBuilder builder = new GsonBuilder();
+		Gson gson = builder.create();
+		String jonstring = gson.toJson(finalObject);
+		jonstring = jonstring.substring(18, jonstring.length()-1);
+		System.out.println(jonstring);
+		
 		ListViewAdaptor adapter = new ListViewAdaptor(getActivity(), list);
 		listView.setAdapter(adapter);
 

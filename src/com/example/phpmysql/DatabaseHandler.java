@@ -71,7 +71,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		List<FormData> commentList = new ArrayList<FormData>();
 		SQLiteDatabase db = this.getReadableDatabase();
 		String selectQuery = "SELECT  A.first_name,A.tole,A.comment,A.ward_no,A.user_id,A.comment_id,B.district_name,C.vdc_name FROM  comment  AS A,district B,vdclist C WHERE A.district_id = B.district_id AND A.vdc_id = C.vdc_id AND B.district_id = c.district_id";
-		System.out.println(selectQuery);
+		//System.out.println(selectQuery);
 		Cursor cursor = db.rawQuery(selectQuery, null);
 		if (cursor.moveToFirst()) {
 			do {
