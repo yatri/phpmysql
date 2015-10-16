@@ -14,7 +14,7 @@ import android.util.Log;
 public class DatabaseHandler extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = 2;
 	// Database Name
-	private static final String DATABASE_NAME = "phpmysql";
+	private static final String DATABASE_NAME = "clientServerDB";
 	// Contacts table name
 	private static final String TABLE_COMMENT = "comment";
 	// column

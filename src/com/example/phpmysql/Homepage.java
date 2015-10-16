@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+import com.example.liquor.*;
 
 public class Homepage extends ActionBarActivity {
 
@@ -54,14 +55,16 @@ public class Homepage extends ActionBarActivity {
 				GravityCompat.START);
 
 		// Add Drawer Item to dataList
-		dataList.add(new DrawerItem("Dashboard", R.drawable.ic_action_email));
-		dataList.add(new DrawerItem("Comment", R.drawable.ic_action_good));
-		dataList.add(new DrawerItem("List Comment",
-				R.drawable.ic_action_gamepad));
-		dataList.add(new DrawerItem("Upload", R.drawable.ic_action_labels));
-		dataList.add(new DrawerItem("Search", R.drawable.ic_action_search));
-		dataList.add(new DrawerItem("Cloud", R.drawable.ic_action_cloud));
-		dataList.add(new DrawerItem("Camara", R.drawable.ic_action_camera));
+		dataList.add(new DrawerItem("Home", R.drawable.ic_action_email));
+		dataList.add(new DrawerItem("Top Selling Product",
+				R.drawable.ic_action_good));
+		// dataList.add(new DrawerItem("List Comment",
+		// R.drawable.ic_action_gamepad));
+		// dataList.add(new DrawerItem("Upload", R.drawable.ic_action_labels));
+		// dataList.add(new DrawerItem("Search", R.drawable.ic_action_search));
+		// dataList.add(new DrawerItem("Cloud", R.drawable.ic_action_cloud));
+		dataList.add(new DrawerItem("Product Categories",
+				R.drawable.ic_action_camera));
 		// dataList.add(new DrawerItem("Video", R.drawable.ic_action_video));
 		// dataList.add(new DrawerItem("Groups", R.drawable.ic_action_group));
 		// dataList.add(new DrawerItem("Import & Export",
@@ -122,23 +125,24 @@ public class Homepage extends ActionBarActivity {
 			fragment = new FragmentOne();
 			break;
 		case 1:
-			fragment = new FragmentTwo();
+			fragment = new FragmentTopSelling();
 			break;
 		case 2:
-			fragment = new FragmentThree();
+			fragment = new Fragmentextra();
+			// fragment = new FragmentThree();
 			break;
-		case 3:
-			fragment = new FragmentFour();
-			break;
-		case 4:
-			fragment = new FragmentTwo();
-			break;
-		case 5:
-			fragment = new FragmentThree();
-			break;
-		case 6:
-			fragment = new FragmentOne();
-			break;
+		// case 3:
+		// fragment = new FragmentFour();
+		// break;
+		// case 4:
+		// fragment = new FragmentTwo();
+		// break;
+		// case 5:
+		// fragment = new FragmentThree();
+		// break;
+		// case 6:
+		// fragment = new Fragmentextra();
+		// break;
 		default:
 			break;
 		}
@@ -223,7 +227,7 @@ public class Homepage extends ActionBarActivity {
 										int id) {
 									// do finish
 									Homepage.this.finish();
-									//System.exit(0);
+									// System.exit(0);
 								}
 							})
 					.setNegativeButton("Cancel",

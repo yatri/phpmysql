@@ -17,7 +17,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
     //The Android's default system path of your application database.
     private static String DB_PATH = "/data/data/com.example.phpmysql/databases/";
  
-    private static String DB_NAME = "phpmysql";
+    private static String DB_NAME = "clientServerDB";
  
     private SQLiteDatabase myDataBase; 
  
