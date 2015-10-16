@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#5ccacb"
+    android:background="@drawable/whiskey"
     android:orientation="horizontal" >
 
     <TextView
@@ -10,8 +10,9 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:gravity="center"
+        android:textColor="#fff"
         android:layout_marginLeft="10dp"
-        android:text="Welcome To MY Application"
+        android:text="Welcome To GetMeLiquor"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </LinearLayout>

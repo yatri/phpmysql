@@ -19,7 +19,7 @@
 
     <style name="spinner_style" parent="android:Widget.ListView.DropDown">
         <item name="android:background">@drawable/gradient_spinner</item>
-        <item name="android:popupBackground">#5bc0de</item>
+        <item name="android:popupBackground">#FFB540</item>
         <item name="android:dropDownListViewStyle">@style/TestSpinnerStyle</item>
     </style>
 
