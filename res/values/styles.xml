@@ -2,18 +2,19 @@
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
+            backward-compatibility can go here.
         -->
     </style>
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
+        <item name="android:activatedBackgroundIndicator">@drawable/drawer_list_selector</item>
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
@@ -23,13 +24,17 @@
         <item name="android:dropDownListViewStyle">@style/TestSpinnerStyle</item>
     </style>
 
-    
-    
     <style name="TestSpinnerStyle" parent="android:style/Widget.ListView.DropDown">
         <item name="android:divider">#ff0000</item>
         <item name="android:dividerHeight">5dp</item>
     </style>
 
-   
+    <style name="MyTheme" parent="@android:style/Theme.Holo">
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+    </style>
+
+    <style name="MyActionBar" parent="AppBaseTheme">
+        <item name="android:background">@color/input_login</item>
+    </style>
 
 </resources>

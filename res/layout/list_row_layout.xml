@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/thumbImage"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
@@ -29,9 +29,26 @@
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#fff"
+        android:layout_below="@+id/title"
         android:layout_toRightOf="@id/thumbImage"
+        android:textColor="#fff" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignBottom="@+id/title" />
+        android:layout_below="@+id/date"
+        android:clickable="false"
+        android:focusable="false"
+        android:isIndicator="true"
+        android:focusableInTouchMode="false"
+        android:numStars="5"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:rating="2.0"
+        android:scaleX=".5"
+        android:scaleY=".5"
+        android:stepSize="1.0" />
 
 </RelativeLayout>

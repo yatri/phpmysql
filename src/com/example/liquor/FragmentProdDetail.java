@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -35,7 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.example.phpmysql.*;
+import com.example.setup.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -64,7 +65,8 @@ public class FragmentProdDetail extends Fragment {
 	EditText qty;
 	String jonstring = "";
 	JSONParser jsonParser = new JSONParser();
-	Submitdata submitdata = new Submitdata();;
+	Submitdata submitdata = new Submitdata();
+	private Context actctx;
 	private static String product_page = "http://192.168.40.80:81/loginapi/index.php/loadimage";
 	private static String order_page = "http://192.168.40.80:81/loginapi/index.php/upload";
 	ArrayList<String> listspinner = new ArrayList<String>();
@@ -97,7 +99,7 @@ public class FragmentProdDetail extends Fragment {
 			Toast.makeText(getActivity(), "Some Problem Occured",
 					Toast.LENGTH_LONG).show();
 		} else {
-			new GetSpecificProduct().execute();
+			new GetSpecificProduct(actctx).execute();
 		}
 
 		submit.setOnClickListener(new OnClickListener() {
@@ -180,6 +182,11 @@ public class FragmentProdDetail extends Fragment {
 
 	class GetSpecificProduct extends AsyncTask<String, String, String> {
 		JSONArray typearray;
+		private Context myCtx;
+		public GetSpecificProduct(Context ctx){
+	        // Now set context
+	        this.myCtx = ctx;
+	    }
 		@Override
 		protected String doInBackground(String... args) {
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -219,6 +226,7 @@ public class FragmentProdDetail extends Fragment {
 
 		protected void onPostExecute(String file_url) {
 			//pDialog.dismiss();
+			int loader = R.drawable.loader;
 			if (jsonstatus == 0) {
 				productImg = (ImageView) getView()
 						.findViewById(R.id.thumbImage);
@@ -241,7 +249,9 @@ public class FragmentProdDetail extends Fragment {
 
 				nameTxt.setText(name);
 				desTxt.setText(description);
-				new ImageDownloaderTask(productImg).execute(imageurl);
+				ImageLoader imgLoader = new ImageLoader(myCtx);
+				imgLoader.DisplayImage(imageurl, loader,productImg);
+				//new ImageDownloaderTask(productImg).execute(imageurl);
 			}
 		}
 

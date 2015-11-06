@@ -26,7 +26,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.example.phpmysql.*;
+import com.example.setup.R;
+import com.example.setup.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

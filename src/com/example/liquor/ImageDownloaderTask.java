@@ -6,7 +6,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import org.apache.http.HttpStatus;
 
-import com.example.phpmysql.R;
+import com.example.setup.R;
 //import com.example.customizedlist.R;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

@@ -176,13 +176,13 @@
 
                 <Button
                     android:id="@+id/btnSubmit"
-                    android:layout_width="278dp"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="18dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_weight="0.85"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="0.11"
                     android:background="#FFB540"
-                    android:text="GET THIS"
+                    android:text="Add To Cart"
                     android:textColor="#f2f2f2"
                     android:textSize="20sp" >
                 </Button>
